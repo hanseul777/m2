@@ -1,5 +1,6 @@
 package org.zerock.m2.dao;
 
+import com.ibm.j9ddr.vm29.pointer.generated.__darwin_x86_exception_state64Pointer;
 import lombok.extern.log4j.Log4j2;
 import org.zerock.m2.dto.MsgDTO;
 
@@ -17,6 +18,70 @@ public enum MsgDAO {
             "from tbl_msg\n" +
             "where whom = ? or who = ?\n" +
             "order by kind asc, mno desc"; // 값(user5)를 ?로 변경
+
+    private static final String SQL_SELECT = "select mno, who, whom,content, regdate,opendate from tbl_msg where mno = ?";
+    private static final String SQL_UPDATE_OPEN = "update tbl_msg set opendate = now() where mno = ?";
+
+    private static final String SQL_REMOVE = "delete from tbl_msg where mno = ? and who = ?";
+
+    public void delete(MsgDTO msgDTO) throws RuntimeException {
+
+       new JdbcTemplate(){
+           @Override
+           protected void execute() throws Exception {
+
+               preparedStatement = connection.prepareStatement(SQL_REMOVE);
+               preparedStatement.setLong(1,msgDTO.getMno());
+               preparedStatement.setString(2,msgDTO.getWho());
+
+               int count = preparedStatement.executeUpdate();
+
+               log.info("count " + count);
+           }
+       }.makeAll();
+    }
+
+    //해당번호의 MsgDTO를 가져와라
+    public MsgDTO select(Long mno) throws RuntimeException {
+
+        MsgDTO msgDTO = MsgDTO.builder().build();
+
+        new JdbcTemplate() {
+            @Override
+            protected void execute() throws Exception{
+
+                //update opendate
+                preparedStatement = connection.prepareStatement(SQL_UPDATE_OPEN);
+                preparedStatement.setLong(1,mno);
+
+                preparedStatement.executeUpdate();
+
+                //쿼리문을 연달아서 실행하기위해 일단 직접닫아주고 가비지컬렉터를 위해 null값을 준다.
+                preparedStatement.close();
+                preparedStatement = null;
+
+
+                //who,whom,content
+                preparedStatement = connection.prepareStatement(SQL_SELECT);
+                preparedStatement.setLong(1, mno);
+                resultSet = preparedStatement.executeQuery();
+
+                resultSet.next();
+
+                //mno, who, whom,content, regdate
+                // opendate
+                msgDTO.setMno(resultSet.getLong(1));
+                msgDTO.setWho(resultSet.getString(2));
+                msgDTO.setWhom(resultSet.getString(3));
+                msgDTO.setContent(resultSet.getString(4));
+                msgDTO.setRegdate(resultSet.getTimestamp(5));
+
+                msgDTO.setOpendate(resultSet.getTimestamp(6));
+
+            }
+        }.makeAll();
+        return msgDTO;
+    }
 
     public void insert(MsgDTO msgDTO) throws RuntimeException{
 

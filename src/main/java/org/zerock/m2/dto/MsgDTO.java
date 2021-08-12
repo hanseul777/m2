@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
-@Data
+@Data //getter, setter, toString 등등 만들어지는 것.
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

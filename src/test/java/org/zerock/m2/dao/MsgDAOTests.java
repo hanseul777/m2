@@ -12,6 +12,24 @@ import java.util.stream.IntStream;
 public class MsgDAOTests {
 
     @Test
+    public void testRemove() {
+
+        Long mno = 323L;
+        String who = "user1";
+        MsgDTO dto = MsgDTO.builder().mno(mno).who(who).build();
+
+        MsgDAO.INSTANCE.delete(dto);
+        log.info("지워지나,,?");
+    }
+
+    @Test
+    public void testSelect() {
+        Long mno = 118L;
+
+        log.info(MsgDAO.INSTANCE.select(mno));
+    }
+
+    @Test
     public void testInsertDummies() {
 
         //i가 1부터 시작해서 100까지 간다는 for 루프를 람다식으로 표현
