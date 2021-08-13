@@ -31,9 +31,7 @@
             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/msg/list">MESSAGE LIST</a></li>
             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#experience">RECEIVE MESSAGE</a></li>
             <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#education">SEND MESSAGE</a></li>
-            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#skills">Skills</a></li>
-            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#interests">Interests</a></li>
-            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#awards">Awards</a></li>
+            <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/msg/register">Register</a></li>
         </ul>
     </div>
 </nav>

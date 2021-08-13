@@ -1,6 +1,7 @@
 package org.zerock.m2.controller;
 
 import lombok.extern.log4j.Log4j2;
+import org.zerock.m2.dto.MemberDTO;
 import org.zerock.m2.dto.MsgDTO;
 import org.zerock.m2.service.MsgService;
 
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Log4j2
@@ -19,6 +21,17 @@ public class RegisterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.info("등록 화면 조회");
+
+        //등록화면을 보기 전에 로그인이 필요하다 -> 위치 잘 보기! (ListController에서 복붙 : 반복됨 -> 나중에 filter로 빼줌)
+        //로그인 체크 로직
+        HttpSession session = request.getSession();
+        Object memberobj = session.getAttribute("member"); // 로그인을 안하면 member값이 없음
+        //로그인 관련 정보 없음 - 로그인 안한 사용자
+        if (memberobj == null) {
+            response.sendRedirect("/login"); // login페이지가 아니고 login URL로 보내주니까 login.jsp(x)
+            return; // redirect 후 뭔가 더 실행하지 않아야 하기 때문에 return으로 끊어준다.
+        }
+        MemberDTO memberDTO = (MemberDTO)memberobj; // down casting:영임쌤이 말한 강제형변환
 
         request.getRequestDispatcher("/WEB-INF/msg/register.jsp").forward(request,response);
 

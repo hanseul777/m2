@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j2
-public enum MsgService { //service 계층은 고객의 요구사항을 반영한다.
+public enum MsgService {
+    //service 계층은 고객의 요구사항을 반영한다.
+    //원래는 service의 기능이 더 많고 tests도 해야함. 하지만 지금 당장은 이정도로만,,,
     INSTANCE;
 
     public void remove(MsgDTO msgDTO) throws RuntimeException {
@@ -34,6 +36,7 @@ public enum MsgService { //service 계층은 고객의 요구사항을 반영한
         Map<String, List<MsgDTO>> result = MsgDAO.INSTANCE.selectList(user);
 
         //소요시간을 확인
+        // DAO와 Controller 사이의 다리역할이므로 시간이 많이 걸리면 DAO에 문제가 있는 것. 그래서 시간을 확인해야함.
         long end = System.currentTimeMillis();
         log.info("TIME : " + (end-start));
 
